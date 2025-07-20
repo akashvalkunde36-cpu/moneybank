@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoneyBank - Invest & Earn</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+    header { background-color: #0f172a; color: white; padding: 1rem; text-align: center; }
+    nav { background-color: #1e293b; color: white; display: flex; justify-content: center; gap: 2rem; padding: 0.5rem; }
+    nav a { color: white; text-decoration: none; }
+    .plans { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; padding: 2rem; }
+    .plan { background-color: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); padding: 1rem; width: 250px; text-align: center; }
+    .plan h3 { margin: 0; color: #0f172a; }
+    .btn { display: inline-block; padding: 0.5rem 1rem; margin-top: 1rem; background-color: #0f172a; color: white; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; }
+    .btn:hover { background-color: #1e40af; }
+    .form-section { padding: 2rem; background-color: #e5e7eb; max-width: 400px; margin: auto; border-radius: 10px; }
+    .form-section input, .form-section select { width: 100%; padding: 0.5rem; margin: 0.5rem 0; border-radius: 5px; border: 1px solid #ccc; }
+    footer { background-color: #0f172a; color: white; text-align: center; padding: 1rem; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <header><h1>MoneyBank</h1><p>Invest Today, Earn Tomorrow!</p></header>
+  <nav><a href="#plans">Plans</a><a href="#form">Invest Now</a><a href="#contact">Contact</a></nav>
+  <section id="plans" class="plans">
+    <div class="plan"><h3>₹1000 Plan</h3><p>7 Days</p><p>8% Interest</p><a class="btn" href="#form">Invest Now</a></div>
+    <div class="plan"><h3>₹2000 Plan</h3><p>7 Days</p><p>9% Interest</p><a class="btn" href="#form">Invest Now</a></div>
+    <div class="plan"><h3>₹5000 Plan</h3><p>7 Days</p><p>10% Interest</p><a class="btn" href="#form">Invest Now</a></div>
+  </section>
+  <section id="form" class="form-section">
+    <h2>Start Your Investment</h2>
+    <form onsubmit="startPayment(event)">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required />
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+      <label for="amount">Investment Amount</label>
+      <select id="amount" name="amount" required>
+        <option value="1000">₹1000 - 8% for 7 days</option>
+        <option value="2000">₹2000 - 9% for 7 days</option>
+        <option value="5000">₹5000 - 10% for 7 days</option>
+      </select>
+      <label for="upi">UPI ID</label>
+      <input type="text" id="upi" name="upi" placeholder="yourupi@bank" required />
+      <button class="btn" type="submit">Pay & Invest</button>
+    </form>
+  </section>
+  <footer id="contact"><p>Contact: support@moneybank.com | &copy; 2025 MoneyBank</p></footer>
+  <script>
+    function startPayment(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const amount = document.getElementById("amount").value * 100;
+      const upi = document.getElementById("upi").value;
+      const options = {
+        key: "rzp_test_IYPk3940QkQUXf",
+        amount: amount,
+        currency: "INR",
+        name: "MoneyBank",
+        description: "Investment Payment",
+        prefill: { name: name, email: email, contact: "", method: "upi", upi: { vpa: upi } },
+        handler: function (response) {
+          alert("Payment successful! ID: " + response.razorpay_payment_id);
+        },
+        theme: { color: "#0f172a" }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+</body>
+</html>
